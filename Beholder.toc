@@ -1,0 +1,19 @@
+## Interface: 11302
+
+## Title: Beholder
+## Notes: A beholder sees in all directions. 
+
+## Version: 1.0.0
+
+## Author: Sleepyhead
+## X-Email:  Sleepyhead=AT=baristalabs.io
+
+## X-Category: Other
+## X-Website: http://www.wowace.com/addons/beholder/
+## X-License: All rights reserved.
+
+## SavedVariables: Beholder_Info
+## SavedVariablesPerCharacter: Beholder_Player
+
+Embeds.xml
+Core.lua
