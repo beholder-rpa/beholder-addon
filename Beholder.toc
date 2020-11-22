@@ -1,4 +1,4 @@
-## Interface: 11302
+## Interface: 90002
 
 ## Title: Beholder
 ## Notes: A beholder sees in all directions. 
@@ -15,5 +15,6 @@
 ## SavedVariables: Beholder_Info
 ## SavedVariablesPerCharacter: Beholder_Player
 
-Embeds.xml
-Core.lua
+Libs\Libs.xml
+
+files.xml

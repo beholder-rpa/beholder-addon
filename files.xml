@@ -1,0 +1,24 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/FrameXML/UI.xsd">
+
+  <Script>
+	___BPM_LOAD_TIME = debugprofilestop()
+	collectgarbage()
+	___BPM_LOAD_MEM = collectgarbage("count")
+	</Script>
+
+  
+  <Include file="Settings.lua" />
+  <Include file="Util.lua" />
+  <Include file="Buffer.lua" />
+  <Include file="MatrixFrame.lua" />
+  <Include file="Core.lua" />
+
+  <Script>
+	Beholder.loading_time_total = (debugprofilestop()-___BPM_LOAD_TIME)
+	___BPM_LOAD_TIME=nil
+
+	collectgarbage()
+	Beholder.loading_memory_total = collectgarbage("count")-___BPM_LOAD_MEM
+	___BPM_LOAD_MEM=nil
+	</Script>
+</Ui>

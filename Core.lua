@@ -520,28 +520,27 @@ function Beholder:TransmitSpellStates(ignoreThrottle)
     local _, _, _, gcd = GetSpellInfo(8092);
     local spellStates = {};
 
-    for _, barName in pairs(ActionBars) do
-        for i = 1, 12 do
-            local button = _G[barName .. 'Button' .. i]
-            local slot = ActionButton_GetPagedID(button) or ActionButton_CalculateAction(button) or button:GetAttribute('action') or 0
-            if HasAction(slot) then
-                local actionName, _
-                local actionType, id = GetActionInfo(slot)
-                if actionType == 'macro' then _, _ , id = GetMacroSpell(id) end
-                if (actionType == 'spell' or (actionType == 'macro' and id)) and GetSpellInfo(id) then
-                    local spellState = Beholder:GetSpellState(id, slot);
-                    local tbl = spellStates[spellState.cd];
-                    if not tbl then
-                        tbl = {};
-                    end
-                    table.insert(tbl, spellState);
-                    spellStates[spellState.cd] = tbl;
-                    --Beholder:TransmitSpellState(spellState, ignoreThrottle)
+    local lActionSlot = 0;
+    for lActionSlot = 1, 120 do
+		local lActionText = GetActionText(lActionSlot);
+        local lActionTexture = GetActionTexture(lActionSlot);
+        if lActionTexture then
+            local actionName, _
+            local actionType, id = GetActionInfo(lActionSlot)
+            if actionType == 'macro' then _, _ , id = GetMacroSpell(id) end
+            if (actionType == 'spell' or (actionType == 'macro' and id)) and GetSpellInfo(id) then
+                local spellState = Beholder:GetSpellState(id, slot);
+                local tbl = spellStates[spellState.cd];
+                if not tbl then
+                    tbl = {};
                 end
+                table.insert(tbl, spellState);
+                spellStates[spellState.cd] = tbl;
+                --Beholder:TransmitSpellState(spellState, ignoreThrottle)
             end
         end
     end
-
+m
     -- Try to determine the current GCD value by finding the most spells with a common cooldown that's lte the GCD
     local currentGCD = 0;
     local gcdAffectedSpellCount = 0;
