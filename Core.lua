@@ -2,6 +2,7 @@ Beholder = LibStub("AceAddon-3.0"):NewAddon("Beholder", "AceConsole-3.0", "AceEv
 local Compresser = LibStub:GetLibrary("LibCompress");
 local Encoder = Compresser:GetChatEncodeTable()
 local json = LibStub:GetLibrary("json")
+local messagepack = LibStub:GetLibrary("messagepack")
 
 local Settings = LibStub:GetLibrary("Beholder_Settings")
 local Util = LibStub:GetLibrary("Beholder_Util")
@@ -204,6 +205,7 @@ function Beholder:HandleChatCommand(msg)
     if cmd == nil or cmd == "" or cmd == "help" then
         Beholder:Print("Available chat commands:")
         Beholder:Printf("|cffb7b7b7/beholder debug|r: Toggle debugging")
+        Beholder:Printf("|cffb7b7b7/beholder align: Display Alignment")
         Beholder:Printf("|cffb7b7b7/beholder rc|r: Reset the debug counters")
         Beholder:Printf("|cffb7b7b7/beholder tp|ta: Test Patterns")
         Beholder:Printf("|cffb7b7b7/beholder tp|ta: transmit")
@@ -235,7 +237,7 @@ function Beholder:Transmit(topic, data, prio)
         Beholder:Printf("Transmitting with prefix |cfffdff71" .. topic .. "|r (" .. prefixCounts[topic] .. ").")
         Beholder:Print(json.encode(msg))
     end
-    
+    messagepack.pack(msg)
     Buffer:SendMessage(msg)
 end
 
@@ -405,7 +407,13 @@ function Beholder:GetPlayerPosition()
     local mp = C_Map.GetPlayerMapPosition(mapId, "player");
     local facing = GetPlayerFacing();
 
-    local table = { m = mapId, x = Util:round(mp.x, 6) * 100, y = Util:round(mp.y, 6) * 100, f = facing };
+    local table = {}
+    if not mp then
+        table = { m = mapId, x = nil, y = nil, f = facing };
+    else
+        table = { m = mapId, x = Util:round(mp.x, 6) * 100, y = Util:round(mp.y, 6) * 100, f = facing };
+    end
+
     return table;
 end
 
@@ -540,7 +548,7 @@ function Beholder:TransmitSpellStates(ignoreThrottle)
             end
         end
     end
-m
+
     -- Try to determine the current GCD value by finding the most spells with a common cooldown that's lte the GCD
     local currentGCD = 0;
     local gcdAffectedSpellCount = 0;
