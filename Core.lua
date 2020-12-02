@@ -2,7 +2,7 @@ Beholder = LibStub("AceAddon-3.0"):NewAddon("Beholder", "AceConsole-3.0", "AceEv
 local Compresser = LibStub:GetLibrary("LibCompress");
 local Encoder = Compresser:GetChatEncodeTable()
 local json = LibStub:GetLibrary("json")
-local messagepack = LibStub:GetLibrary("messagepack")
+-- local messagepack = LibStub:GetLibrary("messagepack")
 
 local Settings = LibStub:GetLibrary("Beholder_Settings")
 local Util = LibStub:GetLibrary("Beholder_Util")
@@ -237,7 +237,8 @@ function Beholder:Transmit(topic, data, prio)
         Beholder:Printf("Transmitting with prefix |cfffdff71" .. topic .. "|r (" .. prefixCounts[topic] .. ").")
         Beholder:Print(json.encode(msg))
     end
-    messagepack.pack(msg)
+    -- Uncomment to try messagepack serialization
+    -- messagepack.pack(msg)
     Buffer:SendMessage(msg)
 end
 
@@ -268,7 +269,7 @@ function Beholder:TransmitFullState()
     Beholder:TransmitUnitState("targettarget", true);
     --Withold this for right now.. use?
     --Beholder:TransmitFullButtonInfo();
-    Beholder:TransmitSpellStates(true);
+    Beholder:TransmitSpellStates(true, true);
 end
 
 function Beholder:TransmitUnitState(...)
@@ -409,9 +410,9 @@ function Beholder:GetPlayerPosition()
 
     local table = {}
     if not mp then
-        table = { m = mapId, x = nil, y = nil, f = facing };
+        table = { m = mapId, x = nil, y = nil, f = facing, s = GetSubZoneText() };
     else
-        table = { m = mapId, x = Util:round(mp.x, 6) * 100, y = Util:round(mp.y, 6) * 100, f = facing };
+        table = { m = mapId, x = Util:round(mp.x, 6) * 100, y = Util:round(mp.y, 6) * 100, f = facing, s = GetSubZoneText() };
     end
 
     return table;
@@ -428,8 +429,8 @@ function Beholder:PeriodicBigPlayerUpdate()
 end
 
 function Beholder:PeriodicPlayerUpdate()
-    Beholder:TransmitUnitState("player");
-    Beholder:TransmitBuffs("player");
+    Beholder:TransmitUnitState("player", true);
+    Beholder:TransmitBuffs("player", true);
     Beholder:TransmitPlayerPosition();
 end
 
@@ -439,9 +440,9 @@ function Beholder:PeriodicTargetUpdate()
         return
     end
 
-    Beholder:TransmitUnitState("target");
-    Beholder:TransmitRange("target");
-    Beholder:TransmitBuffs("target");
+    Beholder:TransmitUnitState("target", true);
+    Beholder:TransmitRange("target", true);
+    Beholder:TransmitBuffs("target", true);
 end
 
 function Beholder:PeriodicTargetTargetUpdate()
@@ -454,7 +455,7 @@ function Beholder:PeriodicTargetTargetUpdate()
 end
 
 function Beholder:PeriodicSpellStates()
-    Beholder:TransmitSpellStates();
+    Beholder:TransmitSpellStates(true, true);
 end
 
 function Beholder:TransmitBuffs(...)
@@ -522,7 +523,7 @@ function Beholder:TransmitSpellState(spellState, ignoreThrottle)
     end
 end
 
-function Beholder:TransmitSpellStates(ignoreThrottle)
+function Beholder:TransmitSpellStates(ignoreGCD, ignoreThrottle)
 
     -- Hmm.. this will get the GCD time for the player
     local _, _, _, gcd = GetSpellInfo(8092);
@@ -566,7 +567,7 @@ function Beholder:TransmitSpellStates(ignoreThrottle)
     --Transmit spells not affected by the GCD
     for cd, tbl in pairs(spellStates) do
         for _, spellState in pairs(tbl) do
-            if currentGCD == 0 or not (spellState.cd == currentGCD) then
+            if currentGCD == 0 or not (spellState.cd == currentGCD) or ignoreGCD then
                 Beholder:TransmitSpellState(spellState, ignoreThrottle)
             end
         end
