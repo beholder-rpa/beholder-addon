@@ -18,4 +18,4 @@ Settings.fontPath = "Interface\\AddOns\\Beholder\\Fonts\\joystix.ttf"
 Settings.character = "█"
 
 -- this is the time, in seconds, that each "pixel" should be on screen for. E.g. 0.25 will no render a pixel more than 4x a second.
-Settings.maxFPS= 0.10;
+Settings.maxFPS= 0.25;

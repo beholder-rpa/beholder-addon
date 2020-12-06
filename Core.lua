@@ -149,7 +149,7 @@ function Beholder:OnEnable()
     Beholder:RegisterChatCommand("beholder", "HandleChatCommand")
 
     -- Create a loop that'll periodically send character data in case of an Beholder restart/late start
-    Util:CreateTimer(Beholder.PeriodicBigPlayerUpdate, 20)
+    Util:CreateTimer(Beholder.PeriodicBigPlayerUpdate, 10)
     Util:CreateTimer(Beholder.PeriodicPlayerUpdate, 0.25)
     Util:CreateTimer(Beholder.PeriodicTargetUpdate, 0.25)
     Util:CreateTimer(Beholder.PeriodicTargetTargetUpdate, 0.25)
@@ -420,9 +420,9 @@ end
 
 function Beholder:PeriodicBigPlayerUpdate()
     -- Don't do this in combat, enough data going out at that time already
-    if InCombatLockdown() == 1 then
-        return
-    end
+    -- if InCombatLockdown() == 1 then
+    --     return
+    -- end
 
     local details = Beholder:GetUnitDetails("player");
     Beholder:Transmit("player", details);
@@ -436,9 +436,9 @@ end
 
 function Beholder:PeriodicTargetUpdate()
     -- In combat, we get the range data anyway, so this is pre-combat.
-    if UnitExists("target") == 0 then
-        return
-    end
+    -- if UnitExists("target") == 0 then
+    --     return
+    -- end
 
     Beholder:TransmitUnitState("target", true);
     Beholder:TransmitRange("target", true);
@@ -447,9 +447,9 @@ end
 
 function Beholder:PeriodicTargetTargetUpdate()
     -- In combat, we get the range data anyway, so this is pre-combat.
-    if UnitExists("targettarget") == 0 then
-        return
-    end
+    -- if UnitExists("targettarget") == 0 then
+    --     return
+    -- end
 
     Beholder:TransmitUnitState("targettarget");
 end
