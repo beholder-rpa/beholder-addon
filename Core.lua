@@ -756,9 +756,9 @@ function Beholder:COMBAT_LOG_EVENT_UNFILTERED(event, ...)
             local table = { ts = timestamp, uid = unitID, sid = spellID, n = spellName, r = rank, i = icon, ct = castTime, minRange = minRange, maxRange = maxRange }
 
             if (subevent == "SPELL_CAST_START") then
-                if not (unitID == "player") then
-                    Beholder:Print("|cffff0000 " .. sourceName .. " started casting " .. spellName)
-                end
+                -- if not (unitID == "player") then
+                --     Beholder:Print("|cffff0000 " .. sourceName .. " started casting " .. spellName)
+                -- end
                 Beholder:Transmit("spellCastStart", table, "ALERT")
             elseif (subevent == "SPELL_CAST_SUCCESS") then
                 Beholder:Transmit("spellCastSuccess", table, "ALERT")
